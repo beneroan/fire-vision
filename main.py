@@ -22,17 +22,27 @@ def checkFireThread():
          return
       
       imwrite("images/lastimage.jpg", image)
+      
+      res = os.popen("python gcp.py images/lastimage.jpg 573370690633 ICN724477007634628608").read()
 
-      # @anay do something with the saved image
-      # if gcp says fire, set fire to true
-      # if gcp says no fire, set fire to false
-      fire = random.randint(0, 1) == 0
+      # print(res)
+
+      fire = 'Fire' in res
+
+      # print(fire)
+
+      # flask doesn't like this :(
+      # with open("images/lastimage.jpg", 'rb') as ff:
+      #    content = ff.read()
+      #    prediction = get_prediction(content, "573370690633", "ICN724477007634628608")
+      
+      #    fire = request.payload[0].display_name == 'Fire'
 
       time.sleep(5)
-
-thread = threading.Thread(target=checkFireThread, args=())
-thread.start()
 
 @app.route('/status/fire', methods=['GET'])
 def getStatus():
    return jsonify({ 'status': fire })
+
+thread = threading.Thread(target=checkFireThread, args=())
+thread.start()
